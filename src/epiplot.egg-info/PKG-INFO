@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: epiplot
+Version: 0.1.0
+Summary: A data plotting and geospatial visualization library for epidemiological research.
+Author-email: Lee Hart <leehart3000@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/leehart3000/epiplot
+Project-URL: Repository, https://github.com/leehart3000/epiplot
+Project-URL: Issues, https://github.com/leehart3000/epiplot/issues
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+
+# epiplot
+
+A Python package for data plotting in epidemiological research.
+
+## Status
+This package is currently under active development. Future releases will include 
+specialized plotting functions for epidemiology timelines, trait distributions 
+and data visualization.

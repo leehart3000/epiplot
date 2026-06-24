@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epiplot"
+version = "0.1.0"
+description = "A data plotting and geospatial visualization library for epidemiological research."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+authors = [
+    { name = "Lee Hart", email = "leehart3000@gmail.com" }
+]
+
+dependencies = []
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/leehart3000/epiplot"
+Repository = "https://github.com/leehart3000/epiplot"
+Issues = "https://github.com/leehart3000/epiplot/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["osx-64"]
+
+[tool.pixi.pypi-dependencies]
+epiplot = { path = ".", editable = true }
+
+[tool.pixi.dependencies]
+python = ">=3.10"
+pip = "*"
