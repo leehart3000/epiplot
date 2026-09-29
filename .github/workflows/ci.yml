@@ -15,7 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [default, py314]
+        include:
+          - environment: default
+            task: check
+          - environment: py314
+            task: check
+          - environment: colab
+            task: test
     steps:
       - uses: actions/checkout@v7
         with:
@@ -24,4 +30,4 @@ jobs:
         with:
           locked: true
           environments: ${{ matrix.environment }}
-      - run: pixi run -e ${{ matrix.environment }} check
+      - run: pixi run -e ${{ matrix.environment }} ${{ matrix.task }}
