@@ -149,6 +149,8 @@ def rate_map(
         _, ax = plt.subplots(figsize=(7, 6), layout="constrained")
     handles = _draw_regions(ax, merged, norm, min_cases)
     ax.set_axis_off()
+    ax.margins(0)  # no gap around the map, so the legend lines up with it
+    ax.set_axis_off()
     ax.figure.colorbar(
         ScalarMappable(norm=norm, cmap=RATE_COLORS), ax=ax, shrink=0.7, label=label
     )
@@ -156,7 +158,9 @@ def rate_map(
         ax.legend(
             handles=handles,
             loc="upper left",
-            bbox_to_anchor=(0, 0),
+            bbox_to_anchor=(0, -0.03),
+            borderaxespad=0,
+            borderpad=0,
             frameon=False,
             ncols=len(handles),
             handleheight=1.5,
