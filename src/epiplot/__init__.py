@@ -1,7 +1,10 @@
+from importlib.metadata import version
+
 from epiplot._warnings import EpiplotWarning
 from epiplot.epicurve import count_cases, epicurve
 
-__version__ = "0.1.0"
+# The version is set in pyproject.toml, and read from the installed package.
+__version__ = version("epiplot")
 
 __all__ = ["EpiplotWarning", "count_cases", "epicurve", "info"]
 
