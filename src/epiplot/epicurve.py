@@ -49,6 +49,7 @@ _MISSING_COLOR = "#a3a29d"  # neutral grey, so "Missing" never looks like data
 _INCOMPLETE_COLOR = "#ecebe7"
 _GRID_COLOR = "#e4e3de"
 _TEXT_COLOR = "#52514e"
+_BAR_GAP = 0.5  # thin white line, so neighbouring bars never merge
 
 
 def count_cases(
@@ -224,9 +225,13 @@ def epicurve(
         Optional column holding a count for each row. If not given, each row
         counts as one case.
     incomplete_after
-        Optional date after which data may be incomplete, for example
-        because of reporting delays. That part of the plot is shaded and
-        explained in the legend.
+        Optional date after which counts are likely to be too low because
+        recent cases have not all been reported yet. That part of the plot
+        is shaded and explained in the legend, starting from the whole
+        period that contains this date. A common choice is the date
+        the data was extracted minus the usual delay between the date in
+        ``date_col`` and a case being reported. epiplot does not work this
+        date out from the data.
     ax
         Optional Matplotlib axes to draw on. If not given, a new figure is
         created.
@@ -283,10 +288,22 @@ def epicurve(
     if ax is None:
         _, ax = plt.subplots(figsize=(8, 4.5), layout="constrained")
     _style_axes(ax)
-    ax.set_xlabel(
-        _x_label(date_type, interval, week_start, counts.attrs["n_missing_dates"])
-    )
+    ax.set_xlabel(_x_label(date_type, interval))
     ax.set_ylabel("Number of cases")
+    notes = _notes(date_type, interval, week_start, counts.attrs["n_missing_dates"])
+    if notes:
+        # Smaller, quieter text under the axis title, for notes on method.
+        ax.annotate(
+            notes,
+            xy=(0.5, 0),
+            xycoords=ax.xaxis.label,
+            xytext=(0, -3),
+            textcoords="offset points",
+            ha="center",
+            va="top",
+            fontsize=8,
+            color=_TEXT_COLOR,
+        )
 
     if counts.empty:
         ax.text(
@@ -319,7 +336,7 @@ def epicurve(
             align="edge",
             color=_GROUP_COLORS[0],
             edgecolor="white",
-            linewidth=0.8,
+            linewidth=_BAR_GAP,
             zorder=2,
         )
     else:
@@ -336,7 +353,7 @@ def epicurve(
                 align="edge",
                 color=color,
                 edgecolor="white",
-                linewidth=0.8,
+                linewidth=_BAR_GAP,
                 label=group,
                 zorder=2,
             )
@@ -346,73 +363,82 @@ def epicurve(
         handles.reverse()
 
     if incomplete_after is not None:
+        # Shade whole periods, from the start of the one containing the date.
         cutoff = pd.Timestamp(incomplete_after)
         if cutoff < edges[-1]:
+            first_shaded = int(edges.searchsorted(cutoff, side="right")) - 1
             ax.axvspan(
-                float(mdates.date2num(max(cutoff, edges[0]))),
+                float(edge_nums[max(first_shaded, 0)]),
                 float(edge_nums[-1]),
                 color=_INCOMPLETE_COLOR,
                 linewidth=0,
                 zorder=0,
             )
             handles.append(
-                Patch(
-                    facecolor=_INCOMPLETE_COLOR, label="Recent data may be incomplete"
-                )
+                Patch(facecolor=_INCOMPLETE_COLOR, label="May be incomplete")
             )
 
     if handles:
         ax.legend(
             handles=handles,
-            title=group_col,
+            title=None if group_col is None else group_col[:1].upper() + group_col[1:],
             loc="upper left",
             bbox_to_anchor=(1.01, 1),
             frameon=False,
             alignment="left",
         )
 
-    locator = _date_locator(interval, week_start, len(starts))
-    ax.xaxis.set_major_locator(locator)
+    # A small tick at the start of every period, and a label on each one
+    # (or on every few, for long outbreaks), written at an angle to fit.
+    ax.xaxis.set_major_locator(_date_locator(interval, week_start, len(starts)))
+    ax.xaxis.set_minor_locator(_date_locator(interval, week_start, 1))
     ax.xaxis.set_major_formatter(
         _DateTickFormatter("%b" if interval == "month" else "%d %b")
     )
     ax.set_xlim(float(edge_nums[0]), float(edge_nums[-1]))
     ax.set_ylim(bottom=0)
+    for tick_label in ax.get_xticklabels():
+        tick_label.set(rotation=45, ha="right", rotation_mode="anchor")
     return ax
 
 
-def _x_label(
+def _x_label(date_type: DateType | None, interval: Interval) -> str:
+    """Build the x-axis title, saying what the dates mean."""
+    label = _INTERVAL_WORDS[interval]
+    if date_type in _DATE_TYPE_WORDS:
+        label += f" of {_DATE_TYPE_WORDS[date_type]}"
+    elif date_type is None:
+        label += " (date type not specified)"
+    return label
+
+
+def _notes(
     date_type: DateType | None,
     interval: Interval,
     week_start: WeekStart,
     n_missing: int,
 ) -> str:
-    """Build the x-axis label, including any notes the reader needs."""
-    label = _INTERVAL_WORDS[interval]
-    if date_type in _DATE_TYPE_WORDS:
-        label += f" of {_DATE_TYPE_WORDS[date_type]}"
-
+    """Build the notes on method shown under the x-axis title."""
     notes = []
-    if date_type is None:
-        notes.append("date type not specified")
     if interval == "week":
-        notes.append(f"weeks start on {week_start.capitalize()}")
-    if notes:
-        label += f" ({'; '.join(notes)})"
-
+        notes.append(f"Weeks start on {week_start.capitalize()}.")
     if n_missing:
         what = _DATE_TYPE_WORDS.get(date_type or "", "")
         missing_date = f"missing {what} date" if what else "missing date"
         cases = "case" if n_missing == 1 else "cases"
-        label += f"\n{n_missing} {cases} with {missing_date} not shown"
-    return label
+        notes.append(f"{n_missing} {cases} with {missing_date} not shown.")
+    return " ".join(notes)
 
 
 def _date_locator(
-    interval: Interval, week_start: WeekStart, n_periods: int, max_ticks: int = 12
+    interval: Interval, week_start: WeekStart, n_periods: int, max_labels: int = 26
 ) -> mdates.DateLocator:
-    """Place ticks at the start of periods, so they line up with the bars."""
-    step = max(1, -(-n_periods // max_ticks))  # round up
+    """Place ticks at the start of periods, so they line up with the bars.
+
+    Every period gets a tick if there are up to ``max_labels`` periods;
+    otherwise every second, third (and so on) period does.
+    """
+    step = max(1, -(-n_periods // max_labels))  # round up
     if interval == "day":
         return mdates.DayLocator(interval=step)
     if interval == "week":
@@ -422,7 +448,7 @@ def _date_locator(
 
 
 class _DateTickFormatter(Formatter):
-    """Label ticks with the day and month, adding the year below the first
+    """Label ticks with the day and month, adding the year to the first
     tick and wherever the year changes, so every date is unambiguous."""
 
     def __init__(self, date_format: str) -> None:
@@ -438,7 +464,7 @@ class _DateTickFormatter(Formatter):
             date = mdates.num2date(value)
             label = str(date.strftime(self.date_format))
             if date.year != previous_year:
-                label += f"\n{date.year}"
+                label += f" {date.year}"
                 previous_year = date.year
             labels.append(label)
         return labels
@@ -449,7 +475,9 @@ def _style_axes(ax: Axes) -> None:
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color(_TEXT_COLOR)
-    ax.tick_params(colors=_TEXT_COLOR, length=3)
+    ax.tick_params(colors=_TEXT_COLOR, labelsize=9)
+    ax.tick_params(axis="x", which="major", length=5)
+    ax.tick_params(axis="x", which="minor", length=3, color=_TEXT_COLOR)
     ax.tick_params(axis="y", length=0)
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax.yaxis.grid(True, color=_GRID_COLOR, linewidth=0.8)

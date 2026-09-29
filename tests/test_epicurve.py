@@ -5,6 +5,8 @@ import pandas as pd
 import pytest
 from matplotlib.axes import Axes
 from matplotlib.colors import to_hex
+from matplotlib.dates import num2date
+from matplotlib.patches import Rectangle
 
 from epiplot import EpiplotWarning, epicurve
 
@@ -21,6 +23,11 @@ CASES = pd.DataFrame(
 def bar_heights(ax: Axes) -> list[float]:
     """Return the height of every bar, in drawing order."""
     return [bar.get_height() for container in ax.containers for bar in container]
+
+
+def notes(ax: Axes) -> str:
+    """Return the small notes shown under the x-axis title."""
+    return " ".join(text.get_text() for text in ax.texts)
 
 
 def legend_labels(ax: Axes) -> list[str]:
@@ -48,13 +55,15 @@ def test_date_type_gives_a_clear_label_and_no_warning() -> None:
         warnings.simplefilter("error")
         ax = epicurve(CASES, "onset", date_type="onset")
 
-    assert ax.get_xlabel() == "Week of symptom onset (weeks start on Monday)"
+    assert ax.get_xlabel() == "Week of symptom onset"
+    assert notes(ax) == "Weeks start on Monday."
 
 
 def test_other_date_type_gives_a_plain_label() -> None:
     ax = epicurve(CASES, "onset", date_type="other", interval="day")
 
     assert ax.get_xlabel() == "Date"
+    assert notes(ax) == ""
 
 
 def test_unknown_date_type_raises_an_error() -> None:
@@ -67,7 +76,7 @@ def test_missing_dates_are_reported_on_the_axis() -> None:
 
     ax = epicurve(data, "onset", date_type="onset")
 
-    assert "1 case with missing symptom onset date not shown" in ax.get_xlabel()
+    assert "1 case with missing symptom onset date not shown." in notes(ax)
 
 
 def test_missing_dates_are_counted_as_cases_not_rows() -> None:
@@ -75,7 +84,7 @@ def test_missing_dates_are_counted_as_cases_not_rows() -> None:
 
     ax = epicurve(data, "onset", date_type="report", count_col="n")
 
-    assert "4 cases with missing report date not shown" in ax.get_xlabel()
+    assert "4 cases with missing report date not shown." in notes(ax)
 
 
 def test_groups_are_stacked_with_missing_in_grey() -> None:
@@ -86,6 +95,9 @@ def test_groups_are_stacked_with_missing_in_grey() -> None:
     assert bar_heights(ax) == [1, 0, 0, 1, 0, 0, 0, 0, 1]
     # The legend lists groups in the same order as the stack, top first.
     assert legend_labels(ax) == ["Missing", "travel", "local"]
+    legend = ax.get_legend()
+    assert legend is not None
+    assert legend.get_title().get_text() == "Origin"
     missing_bar = ax.containers[2][0]
     assert to_hex(missing_bar.get_facecolor()) == "#a3a29d"
 
@@ -100,7 +112,16 @@ def test_too_many_groups_raises_an_error() -> None:
 def test_incomplete_recent_data_is_shaded_and_explained() -> None:
     ax = epicurve(CASES, "onset", date_type="onset", incomplete_after="2026-03-16")
 
-    assert legend_labels(ax) == ["Recent data may be incomplete"]
+    assert legend_labels(ax) == ["May be incomplete"]
+
+
+def test_incomplete_shading_covers_whole_weeks() -> None:
+    # 2026-03-11 is a Wednesday, so shading should start on Monday 9 March.
+    ax = epicurve(CASES, "onset", date_type="onset", incomplete_after="2026-03-11")
+
+    shading = ax.patches[-1]
+    assert isinstance(shading, Rectangle)
+    assert num2date(shading.get_x()).strftime("%Y-%m-%d") == "2026-03-09"
 
 
 def test_y_axis_starts_at_zero() -> None:
@@ -132,5 +153,15 @@ def test_date_labels_show_month_and_year() -> None:
 
     labels = [label.get_text() for label in ax.get_xticklabels()]
 
-    assert labels[0] == "02 Mar\n2026"
+    assert labels[0] == "02 Mar 2026"
     assert "2026" not in labels[1]
+
+
+def test_every_week_is_labelled_for_short_outbreaks() -> None:
+    ax = epicurve(CASES, "onset", date_type="onset")
+    ax.figure.canvas.draw()
+
+    labels = [label.get_text() for label in ax.get_xticklabels()]
+
+    # One label for the start of each of the three weeks, plus the end.
+    assert labels == ["02 Mar 2026", "09 Mar", "16 Mar", "23 Mar"]
