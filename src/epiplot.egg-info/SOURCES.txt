@@ -1,7 +1,0 @@
-README.md
-pyproject.toml
-src/epiplot/__init__.py
-src/epiplot.egg-info/PKG-INFO
-src/epiplot.egg-info/SOURCES.txt
-src/epiplot.egg-info/dependency_links.txt
-src/epiplot.egg-info/top_level.txt
