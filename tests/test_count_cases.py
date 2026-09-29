@@ -143,3 +143,11 @@ def test_missing_column_raises_an_error() -> None:
 
     with pytest.raises(KeyError, match="onset_date"):
         count_cases(data, "onset_date")
+
+
+def test_missing_dates_count_cases_not_rows() -> None:
+    data = pd.DataFrame({"onset": ["2026-03-02", None], "n": [1, 4]})
+
+    result = count_cases(data, "onset", count_col="n")
+
+    assert result.attrs["n_missing_dates"] == 4

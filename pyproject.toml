@@ -61,6 +61,8 @@ select = ["E", "W", "F", "I", "B", "UP", "NPY"]
 [tool.mypy]
 strict = true
 files = ["src", "tests"]
+# matplotlib.dates has no type hints yet, so allow calling it.
+untyped_calls_exclude = ["matplotlib.dates"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
