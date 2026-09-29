@@ -12,6 +12,10 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [default, py314]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -19,4 +23,5 @@ jobs:
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           locked: true
-      - run: pixi run check
+          environments: ${{ matrix.environment }}
+      - run: pixi run -e ${{ matrix.environment }} check
