@@ -7,7 +7,7 @@ name = "epiplot"
 version = "0.1.0"
 description = "A data plotting and geospatial visualization library for epidemiological research."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 
@@ -19,9 +19,8 @@ dependencies = []
 
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 
 [project.urls]
@@ -40,5 +39,5 @@ platforms = ["osx-64", "linux-64", "osx-arm64", "win-64"]
 epiplot = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
-python = ">=3.10"
+python = "3.13.*"
 pip = "*"
