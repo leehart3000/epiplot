@@ -2,7 +2,7 @@ from importlib.metadata import version
 
 from epiplot._warnings import EpiplotWarning
 from epiplot.epicurve import count_cases, epicurve
-from epiplot.ratemap import rate_map
+from epiplot.ratemap import rate_map, rate_map_timeline
 from epiplot.rates import calculate_rates
 
 # The version is set in pyproject.toml, and read from the installed package.
@@ -15,6 +15,7 @@ __all__ = [
     "epicurve",
     "info",
     "rate_map",
+    "rate_map_timeline",
 ]
 
 
