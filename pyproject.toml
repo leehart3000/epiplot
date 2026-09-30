@@ -94,6 +94,7 @@ python = "3.14.*"
 default = ["py313"]
 py314 = ["py314"]
 colab = ["colab"]
+docs = ["py313", "docs"]
 
 [tool.pixi.feature.colab.dependencies]
 python = "3.13.*"
@@ -103,3 +104,9 @@ matplotlib-base = "3.10.*"
 scipy = "1.16.*"
 geopandas = "1.1.*"
 shapely = "2.1.*"
+
+[tool.pixi.feature.docs.dependencies]
+sphinx = "*"
+myst-parser = "*"
+pydata-sphinx-theme = "*"
+sphinxcontrib-mermaid = "*"
