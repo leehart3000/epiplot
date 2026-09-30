@@ -10,8 +10,12 @@ built in.
 
 ## Status
 
-Early development (alpha). The first plot, the **epidemic curve**, is
-ready to try. Rate maps and survival curves are planned.
+Early development (alpha). Ready to try:
+
+- **Epidemic curves:** cases over time.
+- **Rate maps:** rates by region, for one period or as a timeline.
+
+Survival curves are planned.
 
 ## Install
 
@@ -19,9 +23,16 @@ ready to try. Rate maps and survival curves are planned.
 pip install epiplot
 ```
 
-Requires Python 3.13 or newer. Works in Google Colab.
+For rate maps, which need GeoPandas, install the extra map libraries too:
 
-## Example
+```bash
+pip install "epiplot[maps]"
+```
+
+Requires Python 3.13 or newer. Works in Google Colab, which already
+includes GeoPandas.
+
+## Epidemic curves
 
 ```python
 import pandas as pd
@@ -41,10 +52,8 @@ ax.figure.savefig("epicurve.png")
 ```
 
 For the counts behind the plot, as a table, use `epiplot.count_cases()`.
-A fuller example is in
-[`examples/epicurve_example.py`](https://github.com/leehart3000/epiplot/blob/main/examples/epicurve_example.py).
 
-## Good practice built in
+Good practice built in:
 
 - **Says what the dates mean.** Onset, report, specimen or diagnosis
   dates tell different stories, so epiplot labels the axis to match, and
@@ -57,6 +66,49 @@ A fuller example is in
 - **Uses colour-blind-safe colours,** with missing groups in grey.
 - **Supports ISO weeks (starting Monday) and US CDC weeks (starting
   Sunday).**
+
+## Rate maps
+
+![A timeline of rate maps made with epiplot, using made-up districts](https://raw.githubusercontent.com/leehart3000/epiplot/main/docs/images/rate_map_timeline_example.png)
+
+```python
+# regions: a GeoPandas table of region shapes, with an "area_code" column.
+# data: one row per region, with "cases" and "population" columns.
+ax = epiplot.rate_map(
+    regions, data, "area_code", cases_col="cases", population_col="population"
+)
+
+# One small map per period, all sharing one colour scale.
+figure = epiplot.rate_map_timeline(
+    regions,
+    data_by_month,
+    "area_code",
+    "month",
+    cases_col="cases",
+    population_col="population",
+)
+```
+
+For the rates behind the maps, with exact 95% confidence intervals, use
+`epiplot.calculate_rates()`. Rates you have already calculated, such as
+age-standardised rates, can be mapped with `rate_col` and `rate_label`.
+
+Good practice built in:
+
+- **Maps rates, not raw counts,** since counts mostly show where people
+  live. Rates are clearly labelled as crude rates.
+- **Hides regions with fewer than 5 cases,** whose rates are unreliable
+  and could identify individuals.
+- **Shows "no data" differently from zero,** so gaps in reporting aren't
+  mistaken for no disease.
+- **Uses a single-colour scale starting at zero,** with colour bands as
+  an option.
+- **Timelines share one colour scale,** so the same shade means the same
+  rate in every period.
+
+Fuller examples are in the
+[`examples`](https://github.com/leehart3000/epiplot/tree/main/examples)
+folder.
 
 ## License
 
