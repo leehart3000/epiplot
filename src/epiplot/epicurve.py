@@ -374,9 +374,7 @@ def epicurve(
                 linewidth=0,
                 zorder=0,
             )
-            handles.append(
-                Patch(facecolor=_INCOMPLETE_COLOR, label="May be incomplete")
-            )
+            handles.append(Patch(facecolor=_INCOMPLETE_COLOR, label="Provisional"))
 
     if handles:
         ax.legend(

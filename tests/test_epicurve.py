@@ -112,7 +112,7 @@ def test_too_many_groups_raises_an_error() -> None:
 def test_incomplete_recent_data_is_shaded_and_explained() -> None:
     ax = epicurve(CASES, "onset", date_type="onset", incomplete_after="2026-03-16")
 
-    assert legend_labels(ax) == ["May be incomplete"]
+    assert legend_labels(ax) == ["Provisional"]
 
 
 def test_incomplete_shading_covers_whole_weeks() -> None:
