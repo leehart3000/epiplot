@@ -6,6 +6,8 @@
 Plots for epidemiology and public health research, with good practice
 built in.
 
+📖 **Documentation:** https://leehart3000.github.io/epiplot/
+
 ![An epidemic curve made with epiplot](https://raw.githubusercontent.com/leehart3000/epiplot/main/docs/images/epicurve_example.png)
 
 ## Status
