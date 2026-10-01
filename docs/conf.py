@@ -18,7 +18,7 @@ extensions = [
 
 # Pages are written in Markdown.
 source_suffix = {".md": "markdown"}
-exclude_patterns = ["_build"]
+exclude_patterns = ["_build", "case-studies/data"]
 
 # Docstrings use the NumPy style, with sections such as "Parameters".
 napoleon_google_docstring = False
