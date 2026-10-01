@@ -1,4 +1,4 @@
-# epiplot
+# <img src="https://leehart3000.github.io/epiplot/_static/epiplot-logo.svg" alt="" height="36"> epiplot
 
 [![CI](https://github.com/leehart3000/epiplot/actions/workflows/ci.yml/badge.svg)](https://github.com/leehart3000/epiplot/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/epiplot)](https://pypi.org/project/epiplot/)
