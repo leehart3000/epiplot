@@ -16,8 +16,7 @@ Early development (alpha). Ready to try:
 
 - **Epidemic curves:** cases over time.
 - **Rate maps:** rates by region, for one period or as a timeline.
-
-Survival curves are planned.
+- **Survival curves:** Kaplan–Meier curves, with a number-at-risk table.
 
 ## Install
 
@@ -58,7 +57,7 @@ For the counts behind the plot, as a table, use `epiplot.count_cases()`.
 Good practice built in:
 
 - **Says what the dates mean.** Onset, report, specimen or diagnosis
-  dates tell different stories, so epiplot labels the axis to match, and
+  dates tell different stories, so **epiplot** labels the axis to match, and
   warns if the date type isn't given.
 - **Shows empty periods as zero,** so gaps in an outbreak stay visible.
 - **Reports cases with missing dates** under the plot, instead of
