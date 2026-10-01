@@ -3,7 +3,47 @@
 Plots for epidemiology and public health research, with good practice
 built in.
 
-![An epidemic curve made with epiplot](images/epicurve_example.png)
+## Gallery
+
+````{grid} 1 2 2 2
+:gutter: 3
+
+```{grid-item-card} Epicurve by day
+:img-top: images/epicurve_daily_example.png
+:img-alt: Bar chart of cases by day of symptom onset, with a single peak
+:link: api.html#epiplot.epicurve
+:link-type: url
+
+A point-source outbreak: everyone was exposed at one event.
+```
+
+```{grid-item-card} Epicurve by week, with groups
+:img-top: images/epicurve_example.png
+:img-alt: Stacked bar chart of cases by week, split into local and travel cases
+:link: api.html#epiplot.epicurve
+:link-type: url
+
+Cases split by origin, with recent weeks shaded as provisional.
+```
+
+```{grid-item-card} Rate map
+:img-top: images/rate_map_example.png
+:img-alt: Map of districts shaded by rate per 100,000 people
+:link: api.html#epiplot.rate_map
+:link-type: url
+
+Crude rates per 100,000, with small numbers hidden.
+```
+
+```{grid-item-card} Rate map timeline
+:img-top: images/rate_map_timeline_example.png
+:img-alt: Four maps showing rates by district, one for each month
+:link: api.html#epiplot.rate_map_timeline
+:link-type: url
+
+The same regions over time, on one shared colour scale.
+```
+````
 
 epiplot makes standard epidemiological plots easy, and hard to get wrong.
 Each plot has sensible defaults based on good practice: clear labels,
