@@ -18,6 +18,14 @@
 .. autofunction:: epiplot.calculate_rates
 ```
 
+## Survival curves
+
+```{eval-rst}
+.. autofunction:: epiplot.survival_curve
+
+.. autofunction:: epiplot.kaplan_meier
+```
+
 ## Warnings
 
 ```{eval-rst}

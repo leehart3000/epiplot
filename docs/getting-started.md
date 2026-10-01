@@ -12,7 +12,7 @@ For rate maps, which need GeoPandas, install the extra map libraries too:
 pip install "epiplot[maps]"
 ```
 
-epiplot needs Python 3.13 or newer. It works in Google Colab, which already
+**epiplot** needs Python 3.13 or newer. It works in Google Colab, which already
 includes GeoPandas.
 
 ## Epidemic curves
@@ -57,6 +57,18 @@ For one small map per period, all sharing one colour scale, use
 
 For the rates behind the maps, with exact 95% confidence intervals, use
 {func}`epiplot.calculate_rates`.
+
+## Survival curves
+
+```python
+ax = epiplot.survival_curve(
+    trial, "weeks", "relapsed", time_unit="weeks", group_col="treatment"
+)
+```
+
+`trial` has one row per person: a follow-up time, and whether the event
+happened (1) or the person was censored (0). For the estimates behind the
+plot, as a table, use {func}`epiplot.kaplan_meier`.
 
 ## More examples
 

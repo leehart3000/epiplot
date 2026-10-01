@@ -108,6 +108,35 @@ Good practice built in:
 - **Timelines share one colour scale,** so the same shade means the same
   rate in every period.
 
+## Survival curves
+
+![Kaplan-Meier survival curves comparing time to relapse for 6-MP and placebo, made with epiplot](https://raw.githubusercontent.com/leehart3000/epiplot/main/docs/images/survival_curve_example.png)
+
+Start with one row per person, with a follow-up time and whether the
+event happened (1) or the person was censored (0):
+
+```python
+ax = epiplot.survival_curve(
+    trial, "weeks", "relapsed", time_unit="weeks", group_col="treatment"
+)
+```
+
+Good practice built in:
+
+- **Time unit on the axis.** If `time_unit` is not given, **epiplot** warns
+  and says so on the axis.
+- **Number at risk.** A table under the plot shows how many people are still
+  being followed, because the right-hand end of a curve often rests on very
+  few people.
+- **Uncertainty and censoring shown.** Shaded 95% confidence bands, and tick
+  marks where people were censored.
+- **Honest scale.** The y axis always runs from 0% to 100%.
+
+For the estimates behind the plot, as a table, use `epiplot.kaplan_meier()`.
+The example uses real data from a 1963 leukaemia trial (Freireich et al.).
+
+## More examples
+
 Fuller examples are in the
 [`examples`](https://github.com/leehart3000/epiplot/tree/main/examples)
 folder.

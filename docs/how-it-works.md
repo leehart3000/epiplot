@@ -30,5 +30,5 @@ the same rate in every period.
 ## Warnings
 
 When a plot is missing something important, such as the meaning of its
-dates, epiplot shows an {class}`epiplot.EpiplotWarning`. The plot is still
+dates, **epiplot** shows an {class}`epiplot.EpiplotWarning`. The plot is still
 drawn, and the problem is also noted on the plot itself.
