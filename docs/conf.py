@@ -9,7 +9,7 @@ release = epiplot.__version__
 version = release
 
 extensions = [
-    "myst_parser",
+    "myst_nb",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx_design",
@@ -17,7 +17,6 @@ extensions = [
 ]
 
 # Pages are written in Markdown.
-source_suffix = {".md": "markdown"}
 exclude_patterns = ["_build", "case-studies/data"]
 
 # Docstrings use the NumPy style, with sections such as "Parameters".
