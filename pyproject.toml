@@ -84,6 +84,7 @@ format-check = "ruff format --check ."
 typecheck = "mypy"
 test = "pytest"
 check = { depends-on = ["lint", "format-check", "typecheck", "test"] }
+fix = "ruff check --fix . && ruff format ."
 
 [tool.pixi.feature.py313.dependencies]
 python = "3.13.*"
