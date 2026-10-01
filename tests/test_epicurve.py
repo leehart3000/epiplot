@@ -76,7 +76,7 @@ def test_missing_dates_are_reported_on_the_axis() -> None:
 
     ax = epicurve(data, "onset", date_type="onset")
 
-    assert "1 case with missing symptom onset date not shown." in notes(ax)
+    assert "1 case is not shown because its symptom onset date is missing." in notes(ax)
 
 
 def test_missing_dates_are_counted_as_cases_not_rows() -> None:
@@ -84,7 +84,7 @@ def test_missing_dates_are_counted_as_cases_not_rows() -> None:
 
     ax = epicurve(data, "onset", date_type="report", count_col="n")
 
-    assert "4 cases with missing report date not shown." in notes(ax)
+    assert "4 cases are not shown because their report date is missing." in notes(ax)
 
 
 def test_groups_are_stacked_with_missing_in_grey() -> None:
@@ -165,3 +165,13 @@ def test_every_week_is_labelled_for_short_outbreaks() -> None:
 
     # One label for the start of each of the three weeks, plus the end.
     assert labels == ["02 Mar 2026", "09 Mar", "16 Mar", "23 Mar"]
+
+
+def test_legend_title_is_tidied_from_the_column_name() -> None:
+    data = CASES.rename(columns={"origin": "travel_history"})
+
+    ax = epicurve(data, "onset", date_type="onset", group_col="travel_history")
+
+    legend = ax.get_legend()
+    assert legend is not None
+    assert legend.get_title().get_text() == "Travel history"

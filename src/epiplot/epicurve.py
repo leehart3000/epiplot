@@ -379,7 +379,7 @@ def epicurve(
     if handles:
         ax.legend(
             handles=handles,
-            title=None if group_col is None else group_col[:1].upper() + group_col[1:],
+            title=None if group_col is None else _legend_title(group_col),
             loc="upper left",
             bbox_to_anchor=(1.01, 1),
             frameon=False,
@@ -398,6 +398,12 @@ def epicurve(
     for tick_label in ax.get_xticklabels():
         tick_label.set(rotation=45, ha="right", rotation_mode="anchor")
     return ax
+
+
+def _legend_title(column: str) -> str:
+    """Turn a column name into a legend title: "travel_history" -> "Travel history"."""
+    title = column.replace("_", " ")
+    return title[:1].upper() + title[1:]
 
 
 def _x_label(date_type: DateType | None, interval: Interval) -> str:
@@ -422,9 +428,13 @@ def _notes(
         notes.append(f"Weeks start on {week_start.capitalize()}.")
     if n_missing:
         what = _DATE_TYPE_WORDS.get(date_type or "", "")
-        missing_date = f"missing {what} date" if what else "missing date"
-        cases = "case" if n_missing == 1 else "cases"
-        notes.append(f"{n_missing} {cases} with {missing_date} not shown.")
+        date = f"{what} date" if what else "date"
+        if n_missing == 1:
+            notes.append(f"1 case is not shown because its {date} is missing.")
+        else:
+            notes.append(
+                f"{n_missing} cases are not shown because their {date} is missing."
+            )
     return " ".join(notes)
 
 

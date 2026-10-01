@@ -21,6 +21,7 @@ from epiplot.epicurve import (
     _MISSING_COLOR,
     _TEXT_COLOR,
     MISSING_GROUP,
+    _legend_title,
     _style_axes,
 )
 
@@ -344,7 +345,7 @@ def survival_curve(
     if handles:
         groups_legend = ax.legend(
             handles=handles,
-            title=group_col[:1].upper() + group_col[1:] if group_col else None,
+            title=_legend_title(group_col) if group_col else None,
             loc="upper left",
             bbox_to_anchor=(1.01, 1),
             frameon=False,
@@ -458,9 +459,14 @@ def _draw_notes(ax: Axes, n_missing: int, n_rows: int) -> None:
     """Write a note under the number-at-risk table about people left out."""
     if not n_missing:
         return
-    people = "person" if n_missing == 1 else "people"
+    if n_missing == 1:
+        note = "1 person is not shown because their time or event is missing."
+    else:
+        note = (
+            f"{n_missing} people are not shown because their time or event is missing."
+        )
     ax.annotate(
-        f"{n_missing} {people} with missing time or event not shown.",
+        note,
         xy=(0.5, 0),
         xycoords=("axes fraction", ax.xaxis.label),
         xytext=(0, -10 - _ROW_HEIGHT * (n_rows + 1)),

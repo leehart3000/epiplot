@@ -183,7 +183,8 @@ def test_people_left_out_are_noted() -> None:
 
     ax = survival_curve(data, "weeks", "relapsed", time_unit="weeks")
 
-    assert "2 people with missing time or event not shown." in all_text(ax)
+    note = "2 people are not shown because their time or event is missing."
+    assert note in all_text(ax)
 
 
 def test_no_note_when_nobody_is_left_out() -> None:
