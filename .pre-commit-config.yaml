@@ -1,0 +1,17 @@
+# Checks that run automatically on every `git commit`.
+# If one fails, run `pixi run fix`, then `git add` the changes and commit again.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-lint
+        name: Ruff lint
+        entry: pixi run lint
+        language: system
+        pass_filenames: false
+        types_or: [python, pyi, jupyter]
+      - id: ruff-format
+        name: Ruff format check
+        entry: pixi run format-check
+        language: system
+        pass_filenames: false
+        types_or: [python, pyi, jupyter]
