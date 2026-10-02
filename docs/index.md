@@ -72,5 +72,6 @@ Ready to try:
 
 getting-started
 how-it-works
+case-studies/index
 api
 ```

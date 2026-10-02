@@ -16,6 +16,8 @@ extensions = [
     "sphinxcontrib.mermaid",
 ]
 
+myst_links_external_new_tab = True
+
 # Pages are written in Markdown.
 exclude_patterns = ["_build", "case-studies/data"]
 
