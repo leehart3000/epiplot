@@ -3,6 +3,7 @@
 !.pixi/config.toml
 
 dist/
+build/
 __pycache__/
 *.egg-info/
 docs/_build/

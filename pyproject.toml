@@ -37,6 +37,9 @@ Repository = "https://github.com/leehart3000/epiplot"
 Issues = "https://github.com/leehart3000/epiplot/issues"
 Documentation = "https://leehart3000.github.io/epiplot/"
 
+[tool.setuptools.package-data]
+epiplot = ["py.typed"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
