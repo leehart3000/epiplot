@@ -44,6 +44,7 @@ def rate_map(
     population_col: str | None = None,
     rate_col: str | None = None,
     rate_label: str | None = None,
+    counted_over: str | None = None,
     per: float = 100_000,
     min_cases: int = 5,
     bands: int | Sequence[float] | None = None,
@@ -76,6 +77,11 @@ def rate_map(
         What the rates are, for the colour scale, for example
         ``"Age-standardised rate per 100,000 people"``. Needed with
         ``rate_col``.
+    counted_over
+        The length of time the cases were counted over, such as ``"28 days"``
+        or ``"1 year"``. It is added to the colour scale label, for example
+        "Crude rate per 100,000 people over 28 days". This only labels the
+        plot: epiplot can't check it, so make sure it matches your data.
     per
         The rate is given per this many people, for example 100,000.
     min_cases
@@ -119,6 +125,7 @@ def rate_map(
         per=per,
         min_cases=min_cases,
     )
+    label = _add_period(label, counted_over)
     _warn_unmatched(table, geo, region_col)
 
     merged = _merge(geo, table, region_col)
@@ -157,6 +164,7 @@ def rate_map_timeline(
     population_col: str | None = None,
     rate_col: str | None = None,
     rate_label: str | None = None,
+    counted_over: str | None = None,
     per: float = 100_000,
     min_cases: int = 5,
     bands: int | Sequence[float] | None = None,
@@ -183,7 +191,7 @@ def rate_map_timeline(
         or the start of a week. Maps are shown in order of this column.
         Dates are labelled like "02 Mar 2026"; to label them differently,
         convert the column to text or an ordered categorical first.
-    cases_col, population_col, rate_col, rate_label, per, min_cases, bands
+    cases_col, population_col, rate_col, rate_label, counted_over, per, min_cases, bands
         As for :func:`rate_map`.
     ncols
         Number of maps in each row. If not given, up to 4.
@@ -221,6 +229,7 @@ def rate_map_timeline(
         min_cases=min_cases,
         period_col=period_col,
     )
+    label = _add_period(label, counted_over)
     _warn_unmatched(table, geo, region_col)
 
     periods = _ordered_periods(table[period_col])
@@ -334,6 +343,18 @@ def _merge(geo: Any, table: pd.DataFrame, region_col: str) -> Any:
     merged = shapes.merge(table, on=region_col, how="left")
     merged["status"] = merged["status"].astype("object").fillna(NO_DATA)
     return merged
+
+
+def _add_period(label: str, counted_over: str | None) -> str:
+    """Add how long the cases were counted over to the colour scale label."""
+    if counted_over is None:
+        return label
+    if not counted_over.strip():
+        raise ValueError(
+            "counted_over must describe a length of time, such as '28 days'"
+        )
+    first_line, newline, rest = label.partition("\n")
+    return f"{first_line} over {counted_over.strip()}{newline}{rest}"
 
 
 def _rate_table(

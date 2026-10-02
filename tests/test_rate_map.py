@@ -164,3 +164,44 @@ def test_colour_bands_can_be_given() -> None:
 def test_invalid_colour_bands_raise_an_error() -> None:
     with pytest.raises(ValueError, match="increasing"):
         _make_norm(np.array([1.0]), [10, 0])
+
+
+def test_counted_over_is_added_to_the_label(regions: Any) -> None:
+    ax = rate_map(
+        regions,
+        DATA,
+        "area",
+        cases_col="cases",
+        population_col="population",
+        counted_over="28 days",
+    )
+
+    assert colour_scale_label(ax) == "Crude rate per 100,000 people over 28 days"
+
+
+def test_counted_over_goes_before_the_small_numbers_note(regions: Any) -> None:
+    data = pd.DataFrame({"area": ["A", "B"], "asr": [100.0, 200.0]})
+
+    with pytest.warns(EpiplotWarning):
+        ax = rate_map(
+            regions,
+            data,
+            "area",
+            rate_col="asr",
+            rate_label="Rate",
+            counted_over="1 year",
+        )
+
+    assert colour_scale_label(ax) == "Rate over 1 year\n(small numbers not hidden)"
+
+
+def test_counted_over_must_not_be_empty(regions: Any) -> None:
+    with pytest.raises(ValueError, match="counted_over"):
+        rate_map(
+            regions,
+            DATA,
+            "area",
+            cases_col="cases",
+            population_col="population",
+            counted_over=" ",
+        )

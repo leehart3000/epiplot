@@ -10,16 +10,16 @@ the project and the routine for making changes.
 2. Get a copy of the repository and install the environments:
 
 ```bash
-   git clone https://github.com/leehart3000/epiplot.git
-   cd epiplot
-   pixi install
+git clone https://github.com/leehart3000/epiplot.git
+cd epiplot
+pixi install
 ```
 
 3. Turn on the pre-commit hook, which checks your code on every commit.
    Do this once for each copy of the repository:
 
 ```bash
-   pixi run pre-commit install
+pixi run pre-commit install
 ```
 
 ## Making a change
@@ -29,15 +29,15 @@ the project and the routine for making changes.
    tests):
 
 ```bash
-   pixi run fix
-   pixi run check
+pixi run fix
+pixi run check
 ```
 
 3. If you changed the documentation, build it and look at the result in
    `docs/_build/html`:
 
 ```bash
-   pixi run -e docs docs
+pixi run -e docs docs
 ```
 
 4. Commit. The pre-commit hook runs the Ruff checks; if it stops the

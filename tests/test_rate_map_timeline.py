@@ -126,3 +126,13 @@ def test_categorical_period_order_is_kept() -> None:
 def test_dates_are_labelled_clearly() -> None:
     assert _period_label(pd.Timestamp("2026-03-02")) == "02 Mar 2026"
     assert _period_label(2026) == "2026"
+
+
+def test_counted_over_is_added_to_the_label(regions: Any) -> None:
+    figure = timeline(regions, counted_over="1 year")
+
+    colour_scales = [
+        ax for ax in figure.axes if ax.get_visible() and not ax.get_title()
+    ]
+    labels = [ax.get_ylabel() for ax in colour_scales]
+    assert labels == ["Crude rate per 100,000 people over 1 year"]
