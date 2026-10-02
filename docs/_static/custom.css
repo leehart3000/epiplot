@@ -1,0 +1,5 @@
+/* Case studies page: give every card picture the same shape. */
+.case-study .sd-card-img-top {
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}

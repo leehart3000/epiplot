@@ -40,3 +40,6 @@ html_sidebars = {"**": []}  # no left sidebar: epiplot's pages have no sub-pages
 html_static_path = ["_static"]
 html_logo = "_static/epiplot-logo.svg"
 html_favicon = "_static/epiplot-logo.svg"
+
+templates_path = ["_templates"]
+html_css_files = ["custom.css"]
