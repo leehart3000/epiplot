@@ -8,6 +8,9 @@ Steps for each new version, in order:
    e.g. 0.4.0 → 0.5.0; fix only: last number, e.g. 0.4.0 → 0.4.1).
 3. `pixi run fix`, then `pixi run check`.
 4. Commit ("Release X.Y.Z"), push, and wait for green ticks on GitHub.
+   Before tagging, check the release commit is really there:
+   `git status` should say "nothing to commit, working tree clean", and
+   `git log -1 --oneline` should show "Release X.Y.Z".
 5. `git tag vX.Y.Z` then `git push origin vX.Y.Z`.
 6. On GitHub: Releases → Draft a new release → choose the tag → title
    `vX.Y.Z` → write a short "What's new" → Publish release.

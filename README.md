@@ -140,6 +140,11 @@ Fuller examples are in the
 [`examples`](https://github.com/leehart3000/epiplot/tree/main/examples)
 folder.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up the project and
+make changes.
+
 ## License
 
 BSD 3-Clause. See [LICENSE](LICENSE).
